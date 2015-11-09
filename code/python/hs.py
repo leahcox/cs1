@@ -1,5 +1,5 @@
 def hs(n):
-    n = int > 0
+    n = int
     t = 0
 
     while (n != 1):
