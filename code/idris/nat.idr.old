@@ -1,0 +1,86 @@
+import bool
+import pair
+
+data nat = O | S nat
+
+||| returns true if the argument is (represents) zero, otherwise false
+isZero: nat -> bool
+isZero O = true
+isZero _ = false
+
+||| returns the successor of any given nat
+succ: nat -> nat
+succ n = S n
+
+||| returns the predecessor of any given nat
+pred: nat -> nat
+pred O = O
+pred (S n) = n
+
+||| return true if the argument is even otherwise false
+evenb: nat -> bool
+evenb O = true
+evenb (S O) = false
+evenb (S (S n)) = evenb n
+
+|||return true if the argument is odd; otherwise false
+oddb: nat -> bool
+oddb n = not (evenb n)
+
+||| given a pair of natural numbers, return its sum
+addp: pair nat nat -> nat
+addp (mkPair O m) = m
+addp (mkPair (S n) m) = S (addp (mkPair m n))
+
+add: nat -> nat -> nat
+add O m = m
+add (S n) m = S (add n m)
+
+||| given a pair of natural numbers, return its sum
+multp: pair nat nat -> nat
+multp (mkPair O m) = O
+multp (mkPair (S n) m) = addp (mkPair m (multp (mkPair n m)))
+
+|||factorial function
+factp: nat -> nat
+factp O = S(O)
+factp (S n) = multp (mkPair (factp n) (S n))
+
+--given a pair of natural numbers, (a,b), return a-b. if a <= b, the answer will be O.
+subp: pair nat nat -> nat
+subp (mkPair O n) = O
+subp (mkPair n O) = n
+subp (mkPair (S n) (S m)) = subp (mkPair n m)
+
+-- given a pair of natural numbers, (x, n), return the value of x raised to the nth power
+exp: pair nat nat -> nat
+exp (mkPair x O) = S(O)
+exp (mkPair x (S n)) = multp (mkPair (exp(mkPair x n)) x)
+
+-- given a pair of natural numbers, (a, b), return true if a is less than or equal to b, otherwise return false
+lep: pair nat nat -> bool
+lep (mkPair O O) = true
+lep (mkPair O (S(a))) = true
+lep (mkPair (S a) (S b)) = lep (mkPair a b)
+lep _ = false
+
+-- given a pair of natural numbers, (a, b), return true if a is equal to b, otherwise return false
+eqp: pair nat nat -> bool
+eqp (mkPair O O) = true
+eqp (mkPair (S a) (S b)) = eqp (mkPair a b)
+eqp _ = false
+
+-- given a pair of natural numbers, (a, b), return true if a is greater than b, otherwise return false
+gtp: pair nat nat -> bool
+gtp (mkPair (S a) (S b)) = not (lep (mkPair a b))
+
+-- given a pair of natural numbers, (a, b), return true if a is greater than or equal to b
+gep: pair nat nat -> bool
+gep (mkPair O O) = true
+gep (mkPair (S a) O) = true
+gep (mkPair O (S a)) = false
+gep (mkPair (S a) (S b)) = gep (mkPair a b)
+
+-- given a pair of natural numbers, (a, b), return true if a is less than b
+ltp: pair nat nat -> bool
+ltp (mkPair a b) = not (gep (mkPair a b))
